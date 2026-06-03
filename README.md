@@ -36,6 +36,8 @@ If an existing index was built with a different embedding model, click **Reindex
 curl -X POST http://127.0.0.1:8787/api/reindex -H "Content-Type: application/json" -d "{}"
 ```
 
+The Vercel deployment uses the `EMBEDDING_PROVIDER=hashing` fallback with a seeded sample index so the public demo stays responsive on serverless functions. The local/default path remains the real MiniLM embedding model; this is an explicit deployment tradeoff, not the core retrieval design.
+
 ## Architecture Answers
 
 What the system does, and the most important architecture decisions: The system turns messy social exports into a queryable knowledge base about one person, then answers questions through retrieval-augmented generation with source citations. The most important decisions were: parser modules use a small `SourceParser` interface so a fourth platform is mostly a new file plus registry entry; chunking is semantic-ish by profile/post/sentence boundaries rather than raw character windows; embeddings default to a real local MiniLM model with cache and explicit reindexing instead of a toy deterministic hash; retrieval is hybrid, combining vector similarity with exact-token lexical overlap and exposing both scores in the UI; and the vector store is local and persisted as an explicit schema so the project runs without Docker, Pinecone, or a paid account while still supporting dedupe, incremental upserts, metadata filtering, and retrieval.
