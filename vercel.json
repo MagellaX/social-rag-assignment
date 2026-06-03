@@ -2,6 +2,11 @@
   "installCommand": "npm install --onnxruntime-node-install=skip",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "src/server/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/:path*",
