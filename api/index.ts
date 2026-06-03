@@ -18,7 +18,7 @@ export default async function handler(req: RewriteRequest, res: unknown) {
   const queryString = req.url?.includes("?") ? `?${req.url.split("?").slice(1).join("?")}` : "";
 
   req.url = `/api/${pathParts.join("/")}${queryString}`;
-  app(req, res);
+  app(req as never, res as never);
 }
 
 interface RewriteRequest {
