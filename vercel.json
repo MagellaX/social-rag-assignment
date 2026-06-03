@@ -4,10 +4,7 @@
   "outputDirectory": "dist",
   "functions": {
     "api/index.js": {
-      "includeFiles": [
-        "src/server/**",
-        "samples/seed-vector-store.hashing.json"
-      ]
+      "includeFiles": "{src/server/**,samples/seed-vector-store.hashing.json}"
     }
   },
   "rewrites": [
