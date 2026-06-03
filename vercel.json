@@ -1,4 +1,5 @@
 {
+  "installCommand": "npm install --onnxruntime-node-install=skip",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
