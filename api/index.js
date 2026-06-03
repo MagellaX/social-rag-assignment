@@ -1,6 +1,8 @@
-import os from "node:os";
-import path from "node:path";
-import { createApp } from "../src/server/app";
+require("tsx/cjs");
+
+const os = require("node:os");
+const path = require("node:path");
+const { createApp } = require("../src/server/app.ts");
 
 process.env.DATA_DIR ??= path.join(os.tmpdir(), "social-rag-data");
 process.env.UPLOAD_DIR ??= path.join(os.tmpdir(), "social-rag-uploads");
@@ -11,17 +13,12 @@ const appPromise = createApp({
   uploadDir: process.env.UPLOAD_DIR
 });
 
-export default async function handler(req: RewriteRequest, res: unknown) {
+module.exports = async function handler(req, res) {
   const app = await appPromise;
   const rewrittenPath = req.query?.path;
   const pathParts = Array.isArray(rewrittenPath) ? rewrittenPath : rewrittenPath ? [rewrittenPath] : [];
   const queryString = req.url?.includes("?") ? `?${req.url.split("?").slice(1).join("?")}` : "";
 
   req.url = `/api/${pathParts.join("/")}${queryString}`;
-  app(req as never, res as never);
-}
-
-interface RewriteRequest {
-  query?: Record<string, string | string[]>;
-  url?: string;
-}
+  app(req, res);
+};
