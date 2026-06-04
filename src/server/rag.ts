@@ -8,6 +8,15 @@ export async function answerQuestion(
   store: VectorStore,
   options: { personId?: string; k?: number; platform?: string; mode?: "hybrid" | "vector" | "keyword" } = {}
 ): Promise<ChatAnswer> {
+  if (isGreeting(question)) {
+    return {
+      provider: "extractive",
+      answer:
+        "Hi. Ask me about this person's opinions, work style, recurring themes, or a specific topic from the indexed social exports.",
+      citations: []
+    };
+  }
+
   const embedder = createEmbedder();
   const [queryEmbedding] = await embedder.embedBatch([question]);
   const chunks = await store.search(queryEmbedding, {
@@ -43,6 +52,10 @@ export async function answerQuestion(
     answer: answerExtractively(question, chunks),
     citations
   };
+}
+
+function isGreeting(question: string): boolean {
+  return /^(hey|hi|hello|howdy|yo|good (morning|afternoon|evening))[!.?\s]*$/i.test(question.trim());
 }
 
 function chunkToCitation(

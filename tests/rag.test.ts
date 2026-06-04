@@ -19,6 +19,15 @@ afterEach(async () => {
 });
 
 describe("rag pipeline", () => {
+  it("handles greetings without retrieving unrelated evidence", async () => {
+    tempDir = await mkdtemp(path.join(os.tmpdir(), "social-rag-"));
+    const store = new VectorStore(path.join(tempDir, "store.json"));
+    const answer = await answerQuestion("hey", store);
+
+    expect(answer.citations).toEqual([]);
+    expect(answer.answer).toContain("Ask me about");
+  });
+
   it("ingests incrementally and answers with citations", async () => {
     tempDir = await mkdtemp(path.join(os.tmpdir(), "social-rag-"));
     const store = new VectorStore(path.join(tempDir, "store.json"));
